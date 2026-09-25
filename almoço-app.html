@@ -61,6 +61,7 @@
             flex-wrap: wrap;
             justify-content: center;
             margin-top: 20px;
+            width: 100%;
         }
 
         button {
@@ -489,6 +490,11 @@
             border-bottom: 2px solid #119C57;
         }
 
+        .menu-section h2 {
+            color: #0A3922;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
 
         .qr-section {
             display: flex;
@@ -524,8 +530,12 @@
                 gap: 15px !important;
             }
 
+            .menu-section h2 {
+                font-size: 16px;
+            }
+
             #menu-cardapio {
-                min-height: 150px !important;
+                min-height: 120px !important;
                 font-size: 13px;
             }
 
@@ -549,11 +559,13 @@
 
             .button-group {
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
             }
 
             button {
                 width: 100%;
+                padding: 10px 12px;
+                font-size: 12px;
             }
 
             table {
@@ -564,8 +576,29 @@
                 padding: 8px 6px;
             }
 
+            .menu-section {
+                padding: 15px;
+            }
+
+            .menu-section > div {
+                gap: 12px !important;
+            }
+
+            .menu-section h2 {
+                font-size: 14px !important;
+            }
+
             #menu-cardapio {
-                min-height: 120px !important;
+                min-height: 100px !important;
+                font-size: 12px;
+            }
+
+            #qrcode {
+                max-width: 150px !important;
+            }
+
+            .qr-label {
+                font-size: 11px;
             }
         }
     </style>
@@ -697,6 +730,7 @@
         let editingIndex = null;
         let selectedForCapture = new Set();
         let lastCaptureDataUrl = null;
+        let currentCardapio = '';
 
         // Dados padrão
         const DEFAULT_DATA = [
@@ -750,6 +784,49 @@
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
                 loadDataFromLocalStorage();
+            }
+        }
+
+        async function loadCardapio() {
+            try {
+                if (!supabaseClient) {
+                    loadCardapioFromLocalStorage();
+                    return;
+                }
+                const today = new Date().toISOString().split('T')[0];
+                const { data, error } = await supabaseClient.from('cardapios').select('*').eq('data', today).single();
+                if (error && error.code !== 'PGRST116') throw error;
+                currentCardapio = data?.conteudo || '';
+                document.getElementById('menu-cardapio').value = currentCardapio;
+            } catch (error) {
+                console.error('Erro ao carregar cardápio:', error);
+                loadCardapioFromLocalStorage();
+            }
+        }
+
+        function loadCardapioFromLocalStorage() {
+            const today = new Date().toISOString().split('T')[0];
+            const stored = localStorage.getItem(`cardapio-${today}`);
+            currentCardapio = stored || '';
+            document.getElementById('menu-cardapio').value = currentCardapio;
+        }
+
+        async function saveCardapio(content) {
+            currentCardapio = content;
+            const today = new Date().toISOString().split('T')[0];
+            localStorage.setItem(`cardapio-${today}`, content);
+
+            if (supabaseClient && isInitialized) {
+                try {
+                    const { data, error } = await supabaseClient.from('cardapios').select('*').eq('data', today).single();
+                    if (data) {
+                        await supabaseClient.from('cardapios').update({ conteudo: content }).eq('data', today);
+                    } else {
+                        await supabaseClient.from('cardapios').insert([{ data: today, conteudo: content }]);
+                    }
+                } catch (error) {
+                    console.error('Erro ao salvar cardápio no Supabase:', error);
+                }
             }
         }
 
@@ -1026,7 +1103,16 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateDate();
             initSupabase();
+            loadCardapio();
             generateQRCode();
+
+            // Auto-save cardápio
+            const cardapioTextarea = document.getElementById('menu-cardapio');
+            if (cardapioTextarea) {
+                cardapioTextarea.addEventListener('input', (e) => {
+                    saveCardapio(e.target.value);
+                });
+            }
         });
     </script>
 </body>
