@@ -1,0 +1,28 @@
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# Dependências
+node_modules/
+package-lock.json
+yarn.lock
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cache
+.cache/
+dist/
+
+# Arquivos temporários
+*.tmp
+*.bak
+~*

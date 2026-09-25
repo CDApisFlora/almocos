@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almoço - Apis Flora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0A3922 0%, #119C57 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: #0A3922;
+            border-radius: 12px 12px 0 0;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        .header-date {
+            font-size: 14px;
+            color: #119C57;
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #119C57;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0D7A45;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 156, 87, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6C8C84;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #556B63;
+        }
+
+        .btn-danger {
+            background: #B10B01;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #8A0800;
+        }
+
+        .btn-copy {
+            background: #119C57;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background: #0D7A45;
+        }
+
+        .btn-small {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .table-wrapper {
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0A3922;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .input-cell {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #119C57;
+            box-shadow: 0 0 0 3px rgba(17, 156, 87, 0.1);
+        }
+
+        .total-row {
+            background: #E8F3EE;
+            font-weight: 600;
+        }
+
+        .total-row td {
+            padding: 15px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #0A3922;
+            border-bottom: 2px solid #119C57;
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: flex-end;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert-success {
+            background: #E8F3EE;
+            color: #0A3922;
+            border: 1px solid #119C57;
+        }
+
+        .alert-error {
+            background: #FDE8E6;
+            color: #B10B01;
+            border: 1px solid #B10B01;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .capture-area {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .button-group {
+                width: 100%;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            td, th {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🍽️ Almoço - Apis Flora</h1>
+                <div class="header-date" id="current-date"></div>
+            </div>
+            <div class="button-group">
+                <button class="btn-primary" onclick="openAddModal()">+ Adicionar</button>
+                <button class="btn-copy" onclick="captureAndCopy()">📋 Copiar Imagem</button>
+                <button class="btn-secondary" onclick="syncData()">🔄 Sincronizar</button>
+            </div>
+        </div>
+
+        <div id="alerts"></div>
+
+        <div class="table-wrapper">
+            <table id="lunch-table">
+                <thead>
+                    <tr>
+                        <th>Pessoa</th>
+                        <th>Quantidade</th>
+                        <th>Particularidades</th>
+                        <th style="width: 60px;">Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <tr>
+                        <td colspan="4" class="empty-state">Carregando dados...</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr class="total-row">
+                    <td style="padding: 15px;">Total de Marmitas</td>
+                    <td id="total-marmitas" style="text-align: center; font-size: 18px; padding: 15px;">0</td>
+                    <td colspan="2"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar/editar -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">Adicionar/Editar Pessoa</div>
+            <form onsubmit="savePerson(event)">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" id="modal-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Quantidade</label>
+                    <input type="number" id="modal-quantity" value="1" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Particularidades</label>
+                    <input type="text" id="modal-notes" placeholder="Ex: Sem feijão, Sem arroz...">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="closeAddModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configuração Supabase (você precisa atualizar com suas credenciais)
+        const SUPABASE_URL = 'https://eccrsrkseulutbnnlojh.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Nw-BwBCYy3hpq6Sz-lnCIQ_h6zL_1rl';
+
+        let supabase = null;
+        let currentData = [];
+        let isInitialized = false;
+
+        // Inicializar Supabase
+        async function initSupabase() {
+            if (!SUPABASE_URL.includes('seu-projeto')) {
+                try {
+                    const { createClient } = window.supabase;
+                    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+                    isInitialized = true;
+                    await loadData();
+                } catch (error) {
+                    showAlert('Erro ao conectar com Supabase', 'error');
+                    loadDataFromLocalStorage();
+                }
+            } else {
+                showAlert('Configure o Supabase primeiro (edite as credenciais)', 'error');
+                loadDataFromLocalStorage();
+            }
+        }
+
+        // Carregar dados do Supabase
+        async function loadData() {
+            try {
+                if (!supabase) return;
+
+                const today = new Date().toISOString().split('T')[0];
+                const { data, error } = await supabase
+                    .from('almocos')
+                    .select('*')
+                    .eq('data', today);
+
+                if (error) throw error;
+                currentData = data || [];
+                renderTable();
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                loadDataFromLocalStorage();
+            }
+        }
+
+        // Local Storage como fallback
+        function loadDataFromLocalStorage() {
+            const today = new Date().toISOString().split('T')[0];
+            const stored = localStorage.getItem(`almocos-${today}`);
+            currentData = stored ? JSON.parse(stored) : [];
+            renderTable();
+        }
+
+        // Renderizar tabela
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+
+            if (currentData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Nenhum almoço cadastrado. Clique em "+ Adicionar" para começar.</td></tr>';
+                document.getElementById('total-marmitas').textContent = '0';
+                return;
+            }
+
+            tbody.innerHTML = currentData.map((item, index) => `
+                <tr>
+                    <td>${item.nome}</td>
+                    <td style="text-align: center;">${item.quantidade || 1}</td>
+                    <td>${item.particularidades || ''}</td>
+                    <td>
+                        <button class="btn-danger btn-small" onclick="deletePerson(${index})">Remover</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            const total = currentData.reduce((sum, item) => sum + (item.quantidade || 1), 0);
+            document.getElementById('total-marmitas').textContent = total;
+        }
+
+        // Salvar pessoa
+        async function savePerson(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('modal-name').value;
+            const quantity = parseInt(document.getElementById('modal-quantity').value) || 1;
+            const notes = document.getElementById('modal-notes').value;
+
+            const person = {
+                nome: name,
+                quantidade: quantity,
+                particularidades: notes,
+                data: new Date().toISOString().split('T')[0]
+            };
+
+            if (supabase && isInitialized) {
+                try {
+                    const { error } = await supabase
+                        .from('almocos')
+                        .insert([person]);
+
+                    if (error) throw error;
+                    showAlert('Pessoa adicionada com sucesso!', 'success');
+                } catch (error) {
+                    console.error('Erro ao salvar:', error);
+                    saveToLocalStorage(person);
+                    showAlert('Salvo localmente (Supabase indisponível)', 'success');
+                }
+            } else {
+                saveToLocalStorage(person);
+                showAlert('Pessoa adicionada!', 'success');
+            }
+
+            currentData.push(person);
+            renderTable();
+            closeAddModal();
+        }
+
+        // Salvar no LocalStorage
+        function saveToLocalStorage(person) {
+            const today = new Date().toISOString().split('T')[0];
+            const key = `almocos-${today}`;
+            const stored = localStorage.getItem(key);
+            const data = stored ? JSON.parse(stored) : [];
+            data.push(person);
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // Deletar pessoa
+        async function deletePerson(index) {
+            if (!confirm('Tem certeza que deseja remover?')) return;
+
+            currentData.splice(index, 1);
+
+            if (supabase && isInitialized) {
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+                    const { error } = await supabase
+                        .from('almocos')
+                        .delete()
+                        .eq('data', today);
+
+                    if (error) throw error;
+                } catch (error) {
+                    console.error('Erro ao deletar:', error);
+                }
+            }
+
+            const today = new Date().toISOString().split('T')[0];
+            localStorage.setItem(`almocos-${today}`, JSON.stringify(currentData));
+            renderTable();
+        }
+
+        // Capturar e copiar imagem
+        async function captureAndCopy() {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Gerando...';
+
+            try {
+                const table = document.getElementById('lunch-table');
+                const canvas = await html2canvas(table, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false
+                });
+
+                canvas.toBlob(async (blob) => {
+                    try {
+                        await navigator.clipboard.write([
+                            new ClipboardItem({
+                                'image/png': blob
+                            })
+                        ]);
+                        showAlert('✅ Imagem copiada! Agora é só colar no WhatsApp.', 'success');
+                    } catch (error) {
+                        // Fallback: download
+                        const url = canvas.toDataURL('image/png');
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = `almoço-${new Date().toISOString().split('T')[0]}.png`;
+                        link.click();
+                        showAlert('📥 Imagem baixada! Você pode compartilhar agora.', 'success');
+                    }
+                });
+            } catch (error) {
+                showAlert('Erro ao capturar imagem', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        // Sincronizar com Supabase
+        async function syncData() {
+            if (!supabase || !isInitialized) {
+                showAlert('Supabase não está configurado', 'error');
+                return;
+            }
+
+            try {
+                await loadData();
+                showAlert('Dados sincronizados!', 'success');
+            } catch (error) {
+                showAlert('Erro ao sincronizar', 'error');
+            }
+        }
+
+        // Modal functions
+        function openAddModal() {
+            document.getElementById('addModal').classList.add('active');
+            document.getElementById('modal-name').focus();
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+            document.getElementById('modal-name').value = '';
+            document.getElementById('modal-quantity').value = '1';
+            document.getElementById('modal-notes').value = '';
+        }
+
+        // Alert function
+        function showAlert(message, type = 'success') {
+            const alerts = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alerts.appendChild(alert);
+
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        // Atualizar data
+        function updateDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('pt-BR', options);
+            document.getElementById('current-date').textContent = today;
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('addModal').addEventListener('click', (e) => {
+            if (e.target.id === 'addModal') {
+                closeAddModal();
+            }
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDate();
+            initSupabase();
+        });
+    </script>
+</body>
+</html>
