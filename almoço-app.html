@@ -141,13 +141,43 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        table th:nth-child(1),
+        table td:nth-child(1) {
+            width: 50px;
+            text-align: center;
+        }
+
+        table th:nth-child(2),
+        table td:nth-child(2) {
+            width: auto;
+            text-align: left;
+        }
+
+        table th:nth-child(3),
+        table td:nth-child(3) {
+            width: 80px;
+            text-align: center;
+        }
+
+        table th:nth-child(4),
+        table td:nth-child(4) {
+            width: auto;
+            text-align: left;
+        }
+
+        table th:nth-child(5),
+        table td:nth-child(5) {
+            width: 140px;
+            text-align: right;
         }
 
         th {
             background: #0A3922;
             color: white;
             padding: 15px;
-            text-align: left;
             font-weight: 600;
             font-size: 14px;
         }
@@ -198,6 +228,16 @@
 
         .total-row td {
             padding: 15px;
+            border-bottom: none;
+        }
+
+        tfoot {
+            background: #E8F3EE;
+        }
+
+        tfoot td {
+            padding: 15px;
+            border-bottom: none;
         }
 
         .empty-state {
@@ -472,25 +512,27 @@
             <table id="lunch-table">
                 <thead>
                     <tr>
-                        <th style="width: 50px; text-align: center;">☑</th>
+                        <th>☑</th>
                         <th>Pessoa</th>
-                        <th style="width: 80px; text-align: center;">QTY</th>
+                        <th>QTD</th>
                         <th>Observação</th>
-                        <th style="width: 140px;">Ação</th>
+                        <th>Ação</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
                     <tr>
-                        <td colspan="4" class="empty-state">Carregando dados...</td>
+                        <td colspan="5" class="empty-state">Carregando dados...</td>
                     </tr>
                 </tbody>
-            </table>
-            <table style="width: 100%; border-collapse: collapse;">
-                <tr class="total-row">
-                    <td style="padding: 15px;">Total de Marmitas</td>
-                    <td id="total-marmitas" style="text-align: center; font-size: 18px; padding: 15px;">0</td>
-                    <td colspan="2"></td>
-                </tr>
+                <tfoot>
+                    <tr class="total-row">
+                        <td></td>
+                        <td><strong>Total de Marmitas</strong></td>
+                        <td><strong id="total-marmitas">0</strong></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -503,7 +545,7 @@
         </tr>
         <tr style="background: #0A3922;">
             <th style="color: white; padding: 15px; text-align: left; font-weight: 700; border: none;">Pessoa</th>
-            <th style="color: white; padding: 15px; text-align: center; font-weight: 700; border: none;">QTY</th>
+            <th style="color: white; padding: 15px; text-align: center; font-weight: 700; border: none;">QTD</th>
             <th style="color: white; padding: 15px; text-align: left; font-weight: 700; border: none;">Observação</th>
         </tr>
         <tbody id="capture-tbody"></tbody>
@@ -630,13 +672,13 @@
 
             tbody.innerHTML = currentData.map((item, index) => `
                 <tr>
-                    <td style="text-align: center; width: 50px;">
+                    <td>
                         <input type="checkbox" ${selectedForCapture.has(index) ? 'checked' : ''} onchange="toggleSelection(${index}, this.checked)">
                     </td>
                     <td>${item.nome}</td>
-                    <td style="text-align: center; width: 80px;">${item.quantidade || 1}</td>
+                    <td>${item.quantidade || 1}</td>
                     <td>${item.particularidades || ''}</td>
-                    <td style="width: 140px;">
+                    <td>
                         <button class="btn-edit btn-small" onclick="editPerson(${index})">Editar</button>
                         <button class="btn-danger btn-small" onclick="deletePerson(${index})">Remover</button>
                     </td>
