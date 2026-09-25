@@ -389,7 +389,7 @@
         const SUPABASE_URL = 'https://eccrsrkseulutbnnlojh.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Nw-BwBCYy3hpq6Sz-lnCIQ_h6zL_1rl';
 
-        let supabase = null;
+        let supabaseClient = null;
         let currentData = [];
         let isInitialized = false;
 
@@ -398,7 +398,7 @@
             if (!SUPABASE_URL.includes('seu-projeto')) {
                 try {
                     const { createClient } = window.supabase;
-                    supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+                    supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
                     isInitialized = true;
                     await loadData();
                 } catch (error) {
@@ -414,10 +414,10 @@
         // Carregar dados do Supabase
         async function loadData() {
             try {
-                if (!supabase) return;
+                if (!supabaseClient) return;
 
                 const today = new Date().toISOString().split('T')[0];
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('almocos')
                     .select('*')
                     .eq('data', today);
@@ -479,9 +479,9 @@
                 data: new Date().toISOString().split('T')[0]
             };
 
-            if (supabase && isInitialized) {
+            if (supabaseClient && isInitialized) {
                 try {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('almocos')
                         .insert([person]);
 
@@ -518,10 +518,10 @@
 
             currentData.splice(index, 1);
 
-            if (supabase && isInitialized) {
+            if (supabaseClient && isInitialized) {
                 try {
                     const today = new Date().toISOString().split('T')[0];
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('almocos')
                         .delete()
                         .eq('data', today);
@@ -580,7 +580,7 @@
 
         // Sincronizar com Supabase
         async function syncData() {
-            if (!supabase || !isInitialized) {
+            if (!supabaseClient || !isInitialized) {
                 showAlert('Supabase não está configurado', 'error');
                 return;
             }
