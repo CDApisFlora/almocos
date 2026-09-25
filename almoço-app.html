@@ -307,13 +307,6 @@
             }
         }
 
-        .capture-area {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
         .selection-group {
             background: white;
             padding: 20px;
@@ -352,8 +345,79 @@
             margin: 0;
         }
 
-        #capture-table {
+        /* Modal para imagem */
+        .image-modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .image-modal.active {
+            display: flex;
+        }
+
+        .image-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow: auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .image-instructions {
+            margin-top: 15px;
+            padding: 15px;
+            background: #E8F3EE;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #0A3922;
+            border: 1px solid #119C57;
+        }
+
+        .image-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .close-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #B10B01;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-image:hover {
+            background: #8A0800;
         }
 
         @media (max-width: 600px) {
@@ -372,6 +436,11 @@
 
             td, th {
                 padding: 8px 10px;
+            }
+
+            .image-container {
+                max-width: 100%;
+                padding: 15px;
             }
         }
     </style>
@@ -449,6 +518,22 @@
         </tr>
     </table>
 
+    <!-- Modal para imagem -->
+    <div class="image-modal" id="imageModal">
+        <div class="image-container">
+            <button class="close-image" onclick="closeImageModal()">✕</button>
+            <img id="capturedImage" src="" alt="Imagem capturada">
+            <div class="image-instructions">
+                <strong>📋 Como copiar:</strong><br>
+                Clique com botão direito na imagem → "Copiar Imagem" → Cole no WhatsApp (Ctrl+V)
+            </div>
+            <div class="image-buttons">
+                <button class="btn-copy" onclick="downloadImage()">⬇️ Baixar Imagem</button>
+                <button class="btn-secondary" onclick="closeImageModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal para adicionar/editar -->
     <div class="modal" id="addModal">
         <div class="modal-content">
@@ -485,6 +570,7 @@
         let editingIndex = null;
         let selectMode = false;
         let selectedForCapture = new Set();
+        let lastCaptureDataUrl = null;
 
         // Inicializar Supabase
         async function initSupabase() {
@@ -641,20 +727,12 @@
             };
 
             if (editingIndex !== null) {
-                // Editando pessoa existente
                 currentData[editingIndex] = person;
                 if (supabaseClient && isInitialized) {
                     try {
                         const today = new Date().toISOString().split('T')[0];
-                        await supabaseClient
-                            .from('almocos')
-                            .delete()
-                            .eq('data', today);
-
-                        const { error } = await supabaseClient
-                            .from('almocos')
-                            .insert(currentData);
-
+                        await supabaseClient.from('almocos').delete().eq('data', today);
+                        const { error } = await supabaseClient.from('almocos').insert(currentData);
                         if (error) throw error;
                         showAlert('Pessoa atualizada com sucesso!', 'success');
                     } catch (error) {
@@ -667,13 +745,9 @@
                 }
                 editingIndex = null;
             } else {
-                // Adicionando nova pessoa
                 if (supabaseClient && isInitialized) {
                     try {
-                        const { error } = await supabaseClient
-                            .from('almocos')
-                            .insert([person]);
-
+                        const { error } = await supabaseClient.from('almocos').insert([person]);
                         if (error) throw error;
                         showAlert('Pessoa adicionada com sucesso!', 'success');
                     } catch (error) {
@@ -696,8 +770,7 @@
         // Salvar no LocalStorage
         function saveToLocalStorage() {
             const today = new Date().toISOString().split('T')[0];
-            const key = `almocos-${today}`;
-            localStorage.setItem(key, JSON.stringify(currentData));
+            localStorage.setItem(`almocos-${today}`, JSON.stringify(currentData));
         }
 
         // Deletar pessoa
@@ -716,17 +789,9 @@
             if (supabaseClient && isInitialized) {
                 try {
                     const today = new Date().toISOString().split('T')[0];
-                    const { error } = await supabaseClient
-                        .from('almocos')
-                        .delete()
-                        .eq('data', today);
-
-                    if (error) throw error;
-
+                    await supabaseClient.from('almocos').delete().eq('data', today);
                     if (currentData.length > 0) {
-                        await supabaseClient
-                            .from('almocos')
-                            .insert(currentData);
+                        await supabaseClient.from('almocos').insert(currentData);
                     }
                 } catch (error) {
                     console.error('Erro ao deletar:', error);
@@ -769,11 +834,10 @@
                     totalQty += (item.quantidade || 1);
                 });
 
-                // Atualizar data e total
                 document.getElementById('capture-date-header').textContent = document.getElementById('current-date').textContent;
                 document.getElementById('capture-total').textContent = totalQty;
 
-                // Capturar a tabela
+                // Capturar tabela
                 const table = document.getElementById('capture-table');
                 const canvas = await html2canvas(table, {
                     backgroundColor: '#ffffff',
@@ -783,26 +847,14 @@
                     useCORS: true
                 });
 
-                // Converter para blob e copiar
-                canvas.toBlob(async (blob) => {
-                    try {
-                        await navigator.clipboard.write([
-                            new ClipboardItem({
-                                'image/png': blob
-                            })
-                        ]);
-                        showAlert('✅ Imagem copiada! Agora é só colar no WhatsApp.', 'success');
-                    } catch (error) {
-                        console.error('Erro ao copiar:', error);
-                        // Fallback: download
-                        const url = canvas.toDataURL('image/png');
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = `almoço-${new Date().toISOString().split('T')[0]}.png`;
-                        link.click();
-                        showAlert('📥 Imagem baixada! Você pode compartilhar agora.', 'success');
-                    }
-                });
+                // Salvar como data URL
+                lastCaptureDataUrl = canvas.toDataURL('image/png');
+
+                // Mostrar imagem no modal
+                document.getElementById('capturedImage').src = lastCaptureDataUrl;
+                document.getElementById('imageModal').classList.add('active');
+
+                showAlert('✅ Imagem pronta! Clique com botão direito para copiar.', 'success');
             } catch (error) {
                 console.error('Erro completo:', error);
                 showAlert('Erro ao capturar imagem: ' + error.message, 'error');
@@ -811,6 +863,31 @@
                 btn.textContent = originalText;
             }
         }
+
+        // Baixar imagem
+        function downloadImage() {
+            if (!lastCaptureDataUrl) {
+                showAlert('Nenhuma imagem para baixar', 'error');
+                return;
+            }
+            const link = document.createElement('a');
+            link.href = lastCaptureDataUrl;
+            link.download = `almoço-${new Date().toISOString().split('T')[0]}.png`;
+            link.click();
+            showAlert('📥 Imagem baixada!', 'success');
+        }
+
+        // Fechar modal de imagem
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('imageModal').addEventListener('click', (e) => {
+            if (e.target.id === 'imageModal') {
+                closeImageModal();
+            }
+        });
 
         // Sincronizar com Supabase
         async function syncData() {
