@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -480,6 +481,79 @@
                 font-size: 12px;
             }
         }
+
+        /* Cardápio e QR Code */
+        .menu-section {
+            background: #F5F5F5;
+            padding: 25px;
+            border-bottom: 2px solid #119C57;
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .menu-item h3 {
+            color: #0A3922;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .menu-item li {
+            color: #333;
+            font-size: 14px;
+            padding: 6px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .menu-item li:last-child {
+            border-bottom: none;
+        }
+
+        .qr-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        #qrcode {
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .qr-label {
+            text-align: center;
+            color: #0A3922;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .menu-container {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-section {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -491,6 +565,35 @@
                 <button class="btn-primary" onclick="openAddModal()">+ Adicionar</button>
                 <button class="btn-copy" onclick="captureAndCopy()">📋 Copiar</button>
                 <button class="btn-secondary" onclick="syncData()">🔄 Sincronizar</button>
+            </div>
+        </div>
+
+        <!-- Seção de Cardápio -->
+        <div class="menu-section">
+            <h2 style="color: #0A3922; margin-bottom: 20px; font-size: 18px;">📅 Cardápio do Dia</h2>
+            <div class="menu-container">
+                <div class="menu-item">
+                    <h3>🍚 Principal</h3>
+                    <textarea id="menu-principal" style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+                <div class="menu-item">
+                    <h3>🫛 Guarnições & Carnes</h3>
+                    <textarea id="menu-carnes" style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+                <div class="menu-item">
+                    <h3>🥬 Saladas</h3>
+                    <textarea id="menu-saladas" style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+                <div class="menu-item">
+                    <h3>📝 Observações</h3>
+                    <textarea id="menu-obs" style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+            </div>
+            <div class="qr-section">
+                <div style="text-align: center;">
+                    <div id="qrcode"></div>
+                    <div class="qr-label">📱 Escaneia para pedir</div>
+                </div>
             </div>
         </div>
 
@@ -596,6 +699,28 @@
         let selectedForCapture = new Set();
         let lastCaptureDataUrl = null;
 
+        // Dados padrão
+        const DEFAULT_DATA = [
+            { nome: 'Ariosan', quantidade: 1, particularidades: '' },
+            { nome: 'Barã', quantidade: 1, particularidades: '' },
+            { nome: 'Beatriz', quantidade: 1, particularidades: '' },
+            { nome: 'Cláudio', quantidade: 1, particularidades: 'Sem Feijão' },
+            { nome: 'Daniel', quantidade: 1, particularidades: '' },
+            { nome: 'Diego', quantidade: 1, particularidades: '' },
+            { nome: 'Ezequiel Pereira', quantidade: 1, particularidades: '' },
+            { nome: 'Ezequiel Felipe', quantidade: 1, particularidades: '' },
+            { nome: 'Gouvin', quantidade: 1, particularidades: 'Somente batata frita e Panqueca de frango ao molho sugo' },
+            { nome: 'Gustavo', quantidade: 1, particularidades: 'Sem arroz' },
+            { nome: 'Igor', quantidade: 1, particularidades: 'Somente mistura' },
+            { nome: 'Leticia', quantidade: 1, particularidades: 'Somente Guarnições e Carnes' },
+            { nome: 'Lima', quantidade: 1, particularidades: 'Não mandar estrogonofe de frango e carne' },
+            { nome: 'Osório', quantidade: 1, particularidades: 'Somente mistura' },
+            { nome: 'Portaria', quantidade: 1, particularidades: '' },
+            { nome: 'Raphael', quantidade: 1, particularidades: '' },
+            { nome: 'Reginaldo', quantidade: 1, particularidades: 'Sem peixe' },
+            { nome: 'Rhuan', quantidade: 1, particularidades: 'Somente batata frita e Panqueca de frango ao molho sugo' }
+        ];
+
         async function initSupabase() {
             if (!SUPABASE_URL.includes('seu-projeto')) {
                 try {
@@ -632,7 +757,19 @@
         function loadDataFromLocalStorage() {
             const today = new Date().toISOString().split('T')[0];
             const stored = localStorage.getItem(`almocos-${today}`);
-            currentData = stored ? JSON.parse(stored) : [];
+
+            if (stored) {
+                currentData = JSON.parse(stored);
+            } else {
+                // Se não houver dados salvos, carregar dados padrão
+                currentData = DEFAULT_DATA.map(item => ({
+                    ...item,
+                    data: today
+                }));
+                // Salvar os dados padrão no localStorage
+                saveToLocalStorage();
+            }
+
             selectedForCapture.clear();
             currentData.forEach((_, index) => selectedForCapture.add(index));
             renderTable();
@@ -649,7 +786,7 @@
             tbody.innerHTML = currentData.map((item, index) => `
                 <tr>
                     <td><input type="checkbox" ${selectedForCapture.has(index) ? 'checked' : ''} onchange="toggleSelection(${index}, this.checked)"></td>
-                    <td>${item.nome}</td>
+                    <td style="cursor: pointer; color: #119C57; font-weight: 500;" onclick="editPerson(${index})">${item.nome}</td>
                     <td>${item.quantidade || 1}</td>
                     <td>${item.particularidades || ''}</td>
                     <td>
@@ -865,9 +1002,32 @@
             if (e.target.id === 'addModal') closeAddModal();
         });
 
+        function generateQRCode() {
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+
+            // URL do GitHub Pages (você vai atualizar isso após fazer push)
+            let qrUrl = window.location.href;
+
+            // Se estiver testando localmente, usa um URL padrão
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                qrUrl = 'https://apisfloracd.github.io/almoço-app-final.html';
+            }
+
+            new QRCode(qrContainer, {
+                text: qrUrl,
+                width: 200,
+                height: 200,
+                colorDark: '#0A3922',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             updateDate();
             initSupabase();
+            generateQRCode();
         });
     </script>
 </body>
