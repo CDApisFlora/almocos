@@ -17,10 +17,10 @@
         }
 
         body {
-            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #0A3922 0%, #119C57 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px 20px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -28,60 +28,46 @@
 
         .container {
             width: 100%;
-            max-width: 900px;
-            margin: 0;
+            max-width: 800px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
         }
 
         .header {
             background: #0A3922;
-            border-radius: 12px 12px 0 0;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 12px;
+            padding: 30px 25px;
             text-align: center;
         }
 
-        .header > div:first-child {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
         .header h1 {
-            font-size: 28px;
+            font-size: 26px;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            margin-bottom: 8px;
             font-weight: 700;
         }
 
         .header-date {
-            font-size: 14px;
+            font-size: 13px;
             color: #119C57;
             font-weight: 500;
         }
 
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
-            width: 100%;
+            margin-top: 20px;
         }
 
         button {
-            padding: 10px 16px;
+            padding: 10px 18px;
             border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -97,35 +83,6 @@
             box-shadow: 0 4px 12px rgba(17, 156, 87, 0.4);
         }
 
-        .btn-secondary {
-            background: #6C8C84;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #556B63;
-        }
-
-        .btn-danger {
-            background: #B10B01;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #8A0800;
-        }
-
-        .btn-edit {
-            background: #667eea;
-            color: white;
-            padding: 6px 10px;
-            font-size: 12px;
-        }
-
-        .btn-edit:hover {
-            background: #5568d3;
-        }
-
         .btn-copy {
             background: #119C57;
             color: white;
@@ -135,227 +92,60 @@
             background: #0D7A45;
         }
 
-        .btn-small {
-            padding: 6px 10px;
-            font-size: 12px;
-        }
-
-        .table-wrapper {
-            background: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
-            border-radius: 0 0 12px 12px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        table th:nth-child(1),
-        table td:nth-child(1) {
-            width: 50px;
-            text-align: center;
-        }
-
-        table th:nth-child(2),
-        table td:nth-child(2) {
-            width: auto;
-            text-align: left;
-        }
-
-        table th:nth-child(3),
-        table td:nth-child(3) {
-            width: 80px;
-            text-align: center;
-        }
-
-        table th:nth-child(4),
-        table td:nth-child(4) {
-            width: auto;
-            text-align: left;
-        }
-
-        table th:nth-child(5),
-        table td:nth-child(5) {
-            width: 140px;
-            text-align: right;
-        }
-
-        th {
-            background: #0A3922;
+        .btn-secondary {
+            background: #6C8C84;
             color: white;
-            padding: 15px;
-            font-weight: 600;
-            font-size: 14px;
-            text-align: center;
         }
 
-        table th:nth-child(2),
-        table th:nth-child(4) {
-            text-align: left;
+        .btn-secondary:hover {
+            background: #556B63;
         }
 
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
+        .btn-edit {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            font-size: 11px;
         }
 
-        tr:hover {
-            background: #f9f9f9;
+        .btn-edit:hover {
+            background: #5568d3;
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        .btn-danger {
+            background: #B10B01;
+            color: white;
+            padding: 6px 12px;
+            font-size: 11px;
         }
 
-        .input-cell {
-            display: flex;
-            gap: 8px;
-            align-items: center;
+        .btn-danger:hover {
+            background: #8A0800;
         }
 
-        input[type="text"] {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #119C57;
-            box-shadow: 0 0 0 3px rgba(17, 156, 87, 0.1);
-        }
-
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .total-row {
-            background: #E8F3EE;
-            font-weight: 600;
-        }
-
-        .total-row td {
-            padding: 15px;
-            border-bottom: none;
-        }
-
-        tfoot {
-            background: #E8F3EE;
-        }
-
-        tfoot td {
-            padding: 15px;
-            border-bottom: none;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-header {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #0A3922;
-            border-bottom: 2px solid #119C57;
-            padding-bottom: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: #555;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-            justify-content: flex-end;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .alerts {
+            padding: 0 25px;
+            padding-top: 15px;
         }
 
         .alert {
             padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 13px;
             animation: slideIn 0.3s ease;
+            margin-bottom: 10px;
         }
 
         .alert-success {
             background: #E8F3EE;
             color: #0A3922;
-            border: 1px solid #119C57;
+            border-left: 4px solid #119C57;
         }
 
         .alert-error {
             background: #FDE8E6;
             color: #B10B01;
-            border: 1px solid #B10B01;
+            border-left: 4px solid #B10B01;
         }
 
         @keyframes slideIn {
@@ -369,45 +159,198 @@
             }
         }
 
-        .selection-group {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .content {
+            padding: 25px;
         }
 
-        .selection-group h3 {
-            margin-bottom: 15px;
-            color: #0A3922;
-            font-size: 16px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
         }
 
-        .selection-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        thead {
+            background: #0A3922;
         }
 
-        .selection-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 6px;
+        th {
+            color: white;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
-        .selection-item label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
+        th:nth-child(1) {
+            width: 40px;
+            text-align: center;
+        }
+
+        th:nth-child(2) {
             flex: 1;
-            margin: 0;
         }
 
-        /* Modal para imagem */
+        th:nth-child(3) {
+            width: 60px;
+            text-align: center;
+        }
+
+        th:nth-child(4) {
+            flex: 1;
+        }
+
+        th:nth-child(5) {
+            width: 130px;
+            text-align: center;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e8e8e8;
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #f5f5f5;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 13px 12px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        td:nth-child(1) {
+            text-align: center;
+        }
+
+        td:nth-child(3) {
+            text-align: center;
+            font-weight: 500;
+        }
+
+        td:nth-child(5) {
+            text-align: center;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #119C57;
+        }
+
+        .btn-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        tfoot tr {
+            background: #E8F3EE;
+            font-weight: 600;
+        }
+
+        tfoot td {
+            padding: 15px 12px;
+            border: none;
+            font-size: 13px;
+        }
+
+        tfoot td:nth-child(1) {
+            width: 40px;
+        }
+
+        tfoot td:nth-child(3) {
+            text-align: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #0A3922;
+            border-bottom: 2px solid #119C57;
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: border 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #119C57;
+            box-shadow: 0 0 0 3px rgba(17, 156, 87, 0.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: flex-end;
+        }
+
+        /* Image Modal */
         .image-modal {
             display: none;
             position: fixed;
@@ -428,81 +371,113 @@
 
         .image-container {
             background: white;
-            border-radius: 12px;
-            padding: 20px;
-            max-width: 90%;
+            border-radius: 16px;
+            padding: 25px;
+            max-width: 600px;
+            width: 100%;
             max-height: 90vh;
             overflow: auto;
-            text-align: center;
             position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
 
         .image-container img {
-            max-width: 100%;
+            width: 100%;
             height: auto;
             border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         .image-instructions {
-            margin-top: 15px;
             padding: 15px;
             background: #E8F3EE;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 13px;
             color: #0A3922;
-            border: 1px solid #119C57;
+            margin-bottom: 20px;
+            border-left: 4px solid #119C57;
         }
 
         .image-buttons {
-            margin-top: 15px;
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
-            flex-wrap: wrap;
         }
 
         .close-image {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 15px;
+            right: 15px;
             background: #B10B01;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             cursor: pointer;
-            font-size: 20px;
+            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.3s ease;
         }
 
         .close-image:hover {
             background: #8A0800;
         }
 
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #119C57;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 6px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 600px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
+            body {
+                padding: 15px 15px;
             }
 
-            .button-group {
-                width: 100%;
+            .container {
+                border-radius: 12px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .content {
+                padding: 15px;
             }
 
             table {
-                font-size: 13px;
+                font-size: 12px;
             }
 
-            td, th {
-                padding: 8px 10px;
+            th, td {
+                padding: 10px 8px;
             }
 
-            .image-container {
-                max-width: 100%;
-                padding: 15px;
+            .button-group {
+                gap: 8px;
+            }
+
+            button {
+                padding: 8px 14px;
+                font-size: 12px;
             }
         }
     </style>
@@ -510,20 +485,18 @@
 <body>
     <div class="container">
         <div class="header">
-            <div>
-                <h1>🍽️ Almoço - Apis Flora</h1>
-                <div class="header-date" id="current-date"></div>
-            </div>
+            <h1>🍽️ Almoço - Apis Flora</h1>
+            <div class="header-date" id="current-date"></div>
             <div class="button-group">
                 <button class="btn-primary" onclick="openAddModal()">+ Adicionar</button>
-                <button class="btn-copy" onclick="captureAndCopy()">📋 Copiar Imagem</button>
+                <button class="btn-copy" onclick="captureAndCopy()">📋 Copiar</button>
                 <button class="btn-secondary" onclick="syncData()">🔄 Sincronizar</button>
             </div>
         </div>
 
-        <div id="alerts"></div>
+        <div class="alerts" id="alerts"></div>
 
-        <div class="table-wrapper">
+        <div class="content">
             <table id="lunch-table">
                 <thead>
                     <tr>
@@ -540,10 +513,10 @@
                     </tr>
                 </tbody>
                 <tfoot>
-                    <tr class="total-row">
+                    <tr>
                         <td></td>
-                        <td><strong>Total de Marmitas</strong></td>
-                        <td><strong id="total-marmitas">0</strong></td>
+                        <td>Total de Marmitas</td>
+                        <td><span id="total-marmitas">0</span></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -553,7 +526,7 @@
     </div>
 
     <!-- Tabela oculta para captura -->
-    <table id="capture-table" style="border-collapse: collapse; width: 100%; font-family: 'Montserrat', sans-serif; background: white;">
+    <table id="capture-table" style="border-collapse: collapse; width: 100%; font-family: 'Montserrat', sans-serif; background: white; display: none;">
         <tr style="background: #0A3922;">
             <th style="color: white; padding: 15px; text-align: left; font-weight: 700; border: none;">🍽️ Almoço - Apis Flora</th>
             <th id="capture-date-header" style="color: #119C57; text-align: right; padding: 15px; font-weight: 500; font-size: 12px; border: none;"></th>
@@ -578,10 +551,10 @@
             <img id="capturedImage" src="" alt="Imagem capturada">
             <div class="image-instructions">
                 <strong>📋 Como copiar:</strong><br>
-                Clique com botão direito na imagem → "Copiar Imagem" → Cole no WhatsApp (Ctrl+V)
+                Clique com botão direito na imagem → "Copiar Imagem" → Cole no WhatsApp
             </div>
             <div class="image-buttons">
-                <button class="btn-copy" onclick="downloadImage()">⬇️ Baixar Imagem</button>
+                <button class="btn-copy" onclick="downloadImage()">⬇️ Baixar</button>
                 <button class="btn-secondary" onclick="closeImageModal()">Fechar</button>
             </div>
         </div>
@@ -613,7 +586,6 @@
     </div>
 
     <script>
-        // Configuração Supabase
         const SUPABASE_URL = 'https://eccrsrkseulutbnnlojh.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Nw-BwBCYy3hpq6Sz-lnCIQ_h6zL_1rl';
 
@@ -621,11 +593,9 @@
         let currentData = [];
         let isInitialized = false;
         let editingIndex = null;
-        let selectMode = false;
         let selectedForCapture = new Set();
         let lastCaptureDataUrl = null;
 
-        // Inicializar Supabase
         async function initSupabase() {
             if (!SUPABASE_URL.includes('seu-projeto')) {
                 try {
@@ -638,22 +608,16 @@
                     loadDataFromLocalStorage();
                 }
             } else {
-                showAlert('Configure o Supabase primeiro (edite as credenciais)', 'error');
+                showAlert('Configure o Supabase primeiro', 'error');
                 loadDataFromLocalStorage();
             }
         }
 
-        // Carregar dados do Supabase
         async function loadData() {
             try {
                 if (!supabaseClient) return;
-
                 const today = new Date().toISOString().split('T')[0];
-                const { data, error } = await supabaseClient
-                    .from('almocos')
-                    .select('*')
-                    .eq('data', today);
-
+                const { data, error } = await supabaseClient.from('almocos').select('*').eq('data', today);
                 if (error) throw error;
                 currentData = data || [];
                 selectedForCapture.clear();
@@ -665,7 +629,6 @@
             }
         }
 
-        // Local Storage como fallback
         function loadDataFromLocalStorage() {
             const today = new Date().toISOString().split('T')[0];
             const stored = localStorage.getItem(`almocos-${today}`);
@@ -675,27 +638,25 @@
             renderTable();
         }
 
-        // Renderizar tabela
         function renderTable() {
             const tbody = document.getElementById('table-body');
-
             if (currentData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum almoço cadastrado. Clique em "+ Adicionar" para começar.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum almoço cadastrado. Clique em "+ Adicionar".</td></tr>';
                 document.getElementById('total-marmitas').textContent = '0';
                 return;
             }
 
             tbody.innerHTML = currentData.map((item, index) => `
                 <tr>
-                    <td>
-                        <input type="checkbox" ${selectedForCapture.has(index) ? 'checked' : ''} onchange="toggleSelection(${index}, this.checked)">
-                    </td>
+                    <td><input type="checkbox" ${selectedForCapture.has(index) ? 'checked' : ''} onchange="toggleSelection(${index}, this.checked)"></td>
                     <td>${item.nome}</td>
                     <td>${item.quantidade || 1}</td>
                     <td>${item.particularidades || ''}</td>
                     <td>
-                        <button class="btn-edit btn-small" onclick="editPerson(${index})">Editar</button>
-                        <button class="btn-danger btn-small" onclick="deletePerson(${index})">Remover</button>
+                        <div class="btn-actions">
+                            <button class="btn-edit" onclick="editPerson(${index})">Editar</button>
+                            <button class="btn-danger" onclick="deletePerson(${index})">Remover</button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -704,17 +665,12 @@
             document.getElementById('total-marmitas').textContent = total;
         }
 
-        // Alternar seleção
         function toggleSelection(index, checked) {
-            if (checked) {
-                selectedForCapture.add(index);
-            } else {
-                selectedForCapture.delete(index);
-            }
+            if (checked) selectedForCapture.add(index);
+            else selectedForCapture.delete(index);
             renderTable();
         }
 
-        // Editar pessoa
         function editPerson(index) {
             editingIndex = index;
             const person = currentData[index];
@@ -725,20 +681,12 @@
             openAddModal();
         }
 
-        // Salvar pessoa
         async function savePerson(event) {
             event.preventDefault();
-
             const name = document.getElementById('modal-name').value;
             const quantity = parseInt(document.getElementById('modal-quantity').value) || 1;
             const notes = document.getElementById('modal-notes').value;
-
-            const person = {
-                nome: name,
-                quantidade: quantity,
-                particularidades: notes,
-                data: new Date().toISOString().split('T')[0]
-            };
+            const person = { nome: name, quantidade: quantity, particularidades: notes, data: new Date().toISOString().split('T')[0] };
 
             if (editingIndex !== null) {
                 currentData[editingIndex] = person;
@@ -746,28 +694,22 @@
                     try {
                         const today = new Date().toISOString().split('T')[0];
                         await supabaseClient.from('almocos').delete().eq('data', today);
-                        const { error } = await supabaseClient.from('almocos').insert(currentData);
-                        if (error) throw error;
-                        showAlert('Pessoa atualizada com sucesso!', 'success');
+                        await supabaseClient.from('almocos').insert(currentData);
+                        showAlert('Pessoa atualizada!', 'success');
                     } catch (error) {
-                        console.error('Erro ao atualizar:', error);
                         saveToLocalStorage();
                         showAlert('Atualizado localmente', 'success');
                     }
-                } else {
-                    saveToLocalStorage();
-                }
+                } else saveToLocalStorage();
                 editingIndex = null;
             } else {
                 if (supabaseClient && isInitialized) {
                     try {
-                        const { error } = await supabaseClient.from('almocos').insert([person]);
-                        if (error) throw error;
-                        showAlert('Pessoa adicionada com sucesso!', 'success');
+                        await supabaseClient.from('almocos').insert([person]);
+                        showAlert('Pessoa adicionada!', 'success');
                     } catch (error) {
-                        console.error('Erro ao salvar:', error);
                         saveToLocalStorage();
-                        showAlert('Salvo localmente (Supabase indisponível)', 'success');
+                        showAlert('Salvo localmente', 'success');
                     }
                 } else {
                     saveToLocalStorage();
@@ -776,21 +718,17 @@
                 currentData.push(person);
                 selectedForCapture.add(currentData.length - 1);
             }
-
             renderTable();
             closeAddModal();
         }
 
-        // Salvar no LocalStorage
         function saveToLocalStorage() {
             const today = new Date().toISOString().split('T')[0];
             localStorage.setItem(`almocos-${today}`, JSON.stringify(currentData));
         }
 
-        // Deletar pessoa
         async function deletePerson(index) {
             if (!confirm('Tem certeza que deseja remover?')) return;
-
             currentData.splice(index, 1);
             selectedForCapture.delete(index);
             const newSelected = new Set();
@@ -804,20 +742,16 @@
                 try {
                     const today = new Date().toISOString().split('T')[0];
                     await supabaseClient.from('almocos').delete().eq('data', today);
-                    if (currentData.length > 0) {
-                        await supabaseClient.from('almocos').insert(currentData);
-                    }
+                    if (currentData.length > 0) await supabaseClient.from('almocos').insert(currentData);
                 } catch (error) {
                     console.error('Erro ao deletar:', error);
                 }
             }
-
             const today = new Date().toISOString().split('T')[0];
             localStorage.setItem(`almocos-${today}`, JSON.stringify(currentData));
             renderTable();
         }
 
-        // Capturar e copiar imagem
         async function captureAndCopy() {
             if (selectedForCapture.size === 0) {
                 showAlert('Selecione ao menos uma pessoa!', 'error');
@@ -827,13 +761,11 @@
             const btn = document.querySelector('.btn-copy');
             const originalText = btn.textContent;
             btn.disabled = true;
-            btn.innerHTML = '<span class="loading"></span> Gerando...';
+            btn.innerHTML = '<span class="loading"></span>Gerando...';
 
             try {
-                // Preencher tabela de captura
                 const tbody = document.getElementById('capture-tbody');
                 tbody.innerHTML = '';
-
                 let totalQty = 0;
                 selectedForCapture.forEach(index => {
                     const item = currentData[index];
@@ -851,74 +783,55 @@
                 document.getElementById('capture-date-header').textContent = document.getElementById('current-date').textContent;
                 document.getElementById('capture-total').textContent = totalQty;
 
-                // Capturar tabela
                 const table = document.getElementById('capture-table');
-                const canvas = await html2canvas(table, {
-                    backgroundColor: '#ffffff',
-                    scale: 2,
-                    logging: false,
-                    allowTaint: true,
-                    useCORS: true
-                });
-
-                // Salvar como data URL
+                table.style.display = 'table';
+                const canvas = await html2canvas(table, { backgroundColor: '#ffffff', scale: 2, logging: false });
+                table.style.display = 'none';
                 lastCaptureDataUrl = canvas.toDataURL('image/png');
-
-                // Mostrar imagem no modal
                 document.getElementById('capturedImage').src = lastCaptureDataUrl;
                 document.getElementById('imageModal').classList.add('active');
-
-                showAlert('✅ Imagem pronta! Clique com botão direito para copiar.', 'success');
+                showAlert('✅ Imagem pronta!', 'success');
             } catch (error) {
-                console.error('Erro completo:', error);
-                showAlert('Erro ao capturar imagem: ' + error.message, 'error');
+                showAlert('Erro ao capturar imagem', 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = originalText;
             }
         }
 
-        // Baixar imagem
         function downloadImage() {
             if (!lastCaptureDataUrl) {
-                showAlert('Nenhuma imagem para baixar', 'error');
+                showAlert('Nenhuma imagem', 'error');
                 return;
             }
             const link = document.createElement('a');
             link.href = lastCaptureDataUrl;
             link.download = `almoço-${new Date().toISOString().split('T')[0]}.png`;
             link.click();
-            showAlert('📥 Imagem baixada!', 'success');
+            showAlert('📥 Baixado!', 'success');
         }
 
-        // Fechar modal de imagem
         function closeImageModal() {
             document.getElementById('imageModal').classList.remove('active');
         }
 
-        // Fechar modal ao clicar fora
         document.getElementById('imageModal').addEventListener('click', (e) => {
-            if (e.target.id === 'imageModal') {
-                closeImageModal();
-            }
+            if (e.target.id === 'imageModal') closeImageModal();
         });
 
-        // Sincronizar com Supabase
         async function syncData() {
             if (!supabaseClient || !isInitialized) {
-                showAlert('Supabase não está configurado', 'error');
+                showAlert('Supabase não configurado', 'error');
                 return;
             }
-
             try {
                 await loadData();
-                showAlert('Dados sincronizados!', 'success');
+                showAlert('Sincronizado!', 'success');
             } catch (error) {
                 showAlert('Erro ao sincronizar', 'error');
             }
         }
 
-        // Modal functions
         function openAddModal() {
             document.getElementById('addModal').classList.add('active');
             document.getElementById('modal-name').focus();
@@ -933,32 +846,25 @@
             editingIndex = null;
         }
 
-        // Alert function
         function showAlert(message, type = 'success') {
             const alerts = document.getElementById('alerts');
             const alert = document.createElement('div');
             alert.className = `alert alert-${type}`;
             alert.textContent = message;
             alerts.appendChild(alert);
-
             setTimeout(() => alert.remove(), 4000);
         }
 
-        // Atualizar data
         function updateDate() {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const today = new Date().toLocaleDateString('pt-BR', options);
             document.getElementById('current-date').textContent = today;
         }
 
-        // Fechar modal ao clicar fora
         document.getElementById('addModal').addEventListener('click', (e) => {
-            if (e.target.id === 'addModal') {
-                closeAddModal();
-            }
+            if (e.target.id === 'addModal') closeAddModal();
         });
 
-        // Inicializar
         document.addEventListener('DOMContentLoaded', () => {
             updateDate();
             initSupabase();
