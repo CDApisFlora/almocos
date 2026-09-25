@@ -352,6 +352,10 @@
             margin: 0;
         }
 
+        #capture-table {
+            display: none;
+        }
+
         @media (max-width: 600px) {
             .header {
                 flex-direction: column;
@@ -425,6 +429,25 @@
             </table>
         </div>
     </div>
+
+    <!-- Tabela oculta para captura -->
+    <table id="capture-table" style="border-collapse: collapse; width: 100%; font-family: 'Montserrat', sans-serif; background: white;">
+        <tr style="background: #0A3922;">
+            <th style="color: white; padding: 15px; text-align: left; font-weight: 700; border: none;">🍽️ Almoço - Apis Flora</th>
+            <th id="capture-date-header" style="color: #119C57; text-align: right; padding: 15px; font-weight: 500; font-size: 12px; border: none;"></th>
+        </tr>
+        <tr style="background: #0A3922;">
+            <th style="color: white; padding: 15px; text-align: left; font-weight: 700; border: none;">Pessoa</th>
+            <th style="color: white; padding: 15px; text-align: center; font-weight: 700; border: none;">Qty</th>
+            <th style="color: white; padding: 15px; text-align: left; font-weight: 700; border: none;">Guarnição</th>
+        </tr>
+        <tbody id="capture-tbody"></tbody>
+        <tr style="background: #E8F3EE; font-weight: 700;">
+            <td style="padding: 15px; border: none;">Total de Marmitas</td>
+            <td id="capture-total" style="text-align: center; font-size: 18px; padding: 15px; border: none;">0</td>
+            <td style="border: none;"></td>
+        </tr>
+    </table>
 
     <!-- Modal para adicionar/editar -->
     <div class="modal" id="addModal">
@@ -623,7 +646,6 @@
                 if (supabaseClient && isInitialized) {
                     try {
                         const today = new Date().toISOString().split('T')[0];
-                        // Delete old and insert new
                         await supabaseClient
                             .from('almocos')
                             .delete()
@@ -684,7 +706,6 @@
 
             currentData.splice(index, 1);
             selectedForCapture.delete(index);
-            // Ajustar índices
             const newSelected = new Set();
             selectedForCapture.forEach(i => {
                 if (i > index) newSelected.add(i - 1);
@@ -724,79 +745,45 @@
                 return;
             }
 
-            const btn = event.target;
+            const btn = document.querySelector('.btn-copy');
             const originalText = btn.textContent;
             btn.disabled = true;
             btn.innerHTML = '<span class="loading"></span> Gerando...';
 
             try {
-                // Criar tabela temporária apenas com selecionados
-                const tempTable = document.createElement('table');
-                tempTable.style.width = '100%';
-                tempTable.style.borderCollapse = 'collapse';
-                tempTable.style.backgroundColor = 'white';
-                tempTable.style.fontFamily = "'Montserrat', sans-serif";
+                // Preencher tabela de captura
+                const tbody = document.getElementById('capture-tbody');
+                tbody.innerHTML = '';
 
-                // Header com data
-                const headerRow = document.createElement('tr');
-                headerRow.style.background = '#0A3922';
-                headerRow.innerHTML = `
-                    <th style="color: white; padding: 15px; text-align: left; font-weight: 600;">🍽️ Almoço - Apis Flora</th>
-                    <th style="color: #119C57; text-align: right; padding: 15px; font-weight: 500; font-size: 12px;" id="capture-date"></th>
-                `;
-                tempTable.appendChild(headerRow);
-
-                // Cabeçalhos das colunas
-                const colHeaderRow = document.createElement('tr');
-                colHeaderRow.style.background = '#0A3922';
-                colHeaderRow.innerHTML = `
-                    <th style="color: white; padding: 15px; text-align: left; font-weight: 600;">Pessoa</th>
-                    <th style="color: white; padding: 15px; text-align: center; font-weight: 600;">Qty</th>
-                    <th style="color: white; padding: 15px; text-align: left; font-weight: 600;">Guarnição</th>
-                `;
-                tempTable.appendChild(colHeaderRow);
-
-                // Linhas de dados selecionados
                 let totalQty = 0;
                 selectedForCapture.forEach(index => {
                     const item = currentData[index];
                     const row = document.createElement('tr');
                     row.style.borderBottom = '1px solid #eee';
                     row.innerHTML = `
-                        <td style="padding: 12px 15px;">${item.nome}</td>
-                        <td style="padding: 12px 15px; text-align: center;">${item.quantidade || 1}</td>
-                        <td style="padding: 12px 15px;">${item.particularidades || ''}</td>
+                        <td style="padding: 12px 15px; border: none;">${item.nome}</td>
+                        <td style="padding: 12px 15px; text-align: center; border: none;">${item.quantidade || 1}</td>
+                        <td style="padding: 12px 15px; border: none;">${item.particularidades || ''}</td>
                     `;
-                    tempTable.appendChild(row);
+                    tbody.appendChild(row);
                     totalQty += (item.quantidade || 1);
                 });
 
-                // Total
-                const totalRow = document.createElement('tr');
-                totalRow.style.background = '#E8F3EE';
-                totalRow.style.fontWeight = '600';
-                totalRow.innerHTML = `
-                    <td style="padding: 15px;">Total de Marmitas</td>
-                    <td style="padding: 15px; text-align: center; font-size: 18px;">${totalQty}</td>
-                    <td style="padding: 15px;"></td>
-                `;
-                tempTable.appendChild(totalRow);
+                // Atualizar data e total
+                document.getElementById('capture-date-header').textContent = document.getElementById('current-date').textContent;
+                document.getElementById('capture-total').textContent = totalQty;
 
-                // Atualizar data na captura
-                document.getElementById('capture-date').textContent = document.getElementById('current-date').textContent;
-
-                // Adicionar ao DOM temporariamente
-                document.body.appendChild(tempTable);
-
-                const canvas = await html2canvas(tempTable, {
+                // Capturar a tabela
+                const table = document.getElementById('capture-table');
+                const canvas = await html2canvas(table, {
                     backgroundColor: '#ffffff',
                     scale: 2,
-                    logging: false
+                    logging: false,
+                    allowTaint: true,
+                    useCORS: true
                 });
 
-                // Remover tabela temporária
-                document.body.removeChild(tempTable);
-
+                // Converter para blob e copiar
                 canvas.toBlob(async (blob) => {
                     try {
                         await navigator.clipboard.write([
@@ -806,6 +793,7 @@
                         ]);
                         showAlert('✅ Imagem copiada! Agora é só colar no WhatsApp.', 'success');
                     } catch (error) {
+                        console.error('Erro ao copiar:', error);
                         // Fallback: download
                         const url = canvas.toDataURL('image/png');
                         const link = document.createElement('a');
@@ -816,8 +804,8 @@
                     }
                 });
             } catch (error) {
-                console.error('Erro:', error);
-                showAlert('Erro ao capturar imagem', 'error');
+                console.error('Erro completo:', error);
+                showAlert('Erro ao capturar imagem: ' + error.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = originalText;
