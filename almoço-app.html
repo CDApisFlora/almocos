@@ -489,37 +489,6 @@
             border-bottom: 2px solid #119C57;
         }
 
-        .menu-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin-bottom: 20px;
-        }
-
-        .menu-item h3 {
-            color: #0A3922;
-            font-size: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .menu-item ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .menu-item li {
-            color: #333;
-            font-size: 14px;
-            padding: 6px 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .menu-item li:last-child {
-            border-bottom: none;
-        }
 
         .qr-section {
             display: flex;
@@ -546,12 +515,57 @@
         }
 
         @media (max-width: 768px) {
-            .menu-container {
-                grid-template-columns: 1fr;
-            }
-
             .menu-section {
                 padding: 20px;
+            }
+
+            .menu-section > div {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+
+            #menu-cardapio {
+                min-height: 150px !important;
+                font-size: 13px;
+            }
+
+            #qrcode {
+                max-width: 180px;
+            }
+
+            .qr-label {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .header {
+                padding: 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            table {
+                font-size: 11px;
+            }
+
+            th, td {
+                padding: 8px 6px;
+            }
+
+            #menu-cardapio {
+                min-height: 120px !important;
             }
         }
     </style>
@@ -570,26 +584,11 @@
 
         <!-- Seção de Cardápio -->
         <div class="menu-section">
-            <h2 style="color: #0A3922; margin-bottom: 20px; font-size: 18px;">📅 Cardápio do Dia</h2>
-            <div class="menu-container">
-                <div class="menu-item">
-                    <h3>🍚 Principal</h3>
-                    <textarea id="menu-principal" style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
+            <div style="display: grid; grid-template-columns: 1fr 250px; gap: 25px; align-items: flex-start;">
+                <div>
+                    <h2 style="color: #0A3922; margin-bottom: 15px; font-size: 18px;">📅 Cardápio do Dia</h2>
+                    <textarea id="menu-cardapio" placeholder="Cole aqui a mensagem completa do cardápio do WhatsApp..." style="width: 100%; min-height: 200px; padding: 15px; border: 2px solid #119C57; border-radius: 8px; font-size: 14px; font-family: 'Montserrat', sans-serif; resize: vertical; line-height: 1.5;"></textarea>
                 </div>
-                <div class="menu-item">
-                    <h3>🫛 Guarnições & Carnes</h3>
-                    <textarea id="menu-carnes" style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
-                </div>
-                <div class="menu-item">
-                    <h3>🥬 Saladas</h3>
-                    <textarea id="menu-saladas" style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
-                </div>
-                <div class="menu-item">
-                    <h3>📝 Observações</h3>
-                    <textarea id="menu-obs" style="width: 100%; min-height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; resize: vertical;"></textarea>
-                </div>
-            </div>
-            <div class="qr-section">
                 <div style="text-align: center;">
                     <div id="qrcode"></div>
                     <div class="qr-label">📱 Escaneia para pedir</div>
